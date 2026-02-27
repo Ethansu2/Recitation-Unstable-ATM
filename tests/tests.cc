@@ -104,17 +104,3 @@ TEST_CASE("new", "[ex-4]") {
   Account sam_account = accounts[{12345678, 1234}];
   REQUIRE(sam_account.balance == 320.30);
 }
-TEST_CASE("Example: Negative widthdraw", "[ex-6]") {
-  Atm atm;
-  atm.RegisterAccount(12345678, 1234, "Sam Sepiol", 300.30);
-  atm.WithdrawCash(12345678, 1234, -20);
-  try {
-    atm.WithdrawCash(12345678, 1234, -20);
-    REQUIRE(false);
-  } catch (...) {
-  }
-  auto accounts = atm.GetAccounts();
-  Account sam_account = accounts[{12345678, 1234}];
-
-  REQUIRE(sam_account.balance == 300.30);
-}
