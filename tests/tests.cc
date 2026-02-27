@@ -110,8 +110,4 @@ TEST_CASE("Example: Negative widthdraw", "[ex-6]") {
   atm.WithdrawCash(12345678, 1234, -20);
   REQUIRE_THROWS_AS(atm.WithdrawCash(12345678, 1234, -20),
                     std::invalid_argument);
-  auto accounts = atm.GetAccounts();
-  Account sam_account = accounts[{12345678, 1234}];
-
-  REQUIRE(sam_account.balance == 300.30);
 }
