@@ -74,3 +74,44 @@ TEST_CASE("Example: Print Prompt Ledger", "[ex-3]") {
   atm.PrintLedger("./prompt.txt", 12345678, 1234);
   REQUIRE(CompareFiles("./ex-1.txt", "./prompt.txt"));
 }
+TEST_CASE("Example: dupilcate_account", "[ex-5]") {
+  Atm atm;
+  atm.RegisterAccount(12345678, 1234, "Sam Sepiol", 300.30);
+  try {
+    atm.RegisterAccount(12345678, 1234, "Sam Sepiol", 300.30);
+    REQUIRE(false);
+  } catch (...) {
+  }
+  auto accounts = atm.GetAccounts();
+  REQUIRE(accounts.contains({12345678, 1234}));
+  REQUIRE(accounts.size() == 1);
+
+  Account sam_account = accounts[{12345678, 1234}];
+  REQUIRE(sam_account.owner_name == "Sam Sepiol");
+  REQUIRE(sam_account.balance == 300.30);
+
+  auto transactions = atm.GetTransactions();
+  REQUIRE(accounts.contains({12345678, 1234}));
+  REQUIRE(accounts.size() == 1);
+  std::vector<std::string> empty;
+  REQUIRE(transactions[{12345678, 1234}] == empty);
+}
+TEST_CASE("new", "[ex-4]") {
+  Atm atm;
+  atm.RegisterAccount(12345678, 1234, "Sam Sepiol", 300.30);
+  atm.DepositCash(12345678, 1234, 20);
+  auto accounts = atm.GetAccounts();
+  Account sam_account = accounts[{12345678, 1234}];
+  REQUIRE(sam_account.balance == 320.30);
+}
+TEST_CASE("Example: Negative widthdraw", "[ex-6]") {
+  Atm atm;
+  atm.RegisterAccount(12345678, 1234, "Sam Sepiol", 300.30);
+  atm.WithdrawCash(12345678, 1234, -20);
+  REQUIRE_THROWS_AS(atm.WithdrawCash(12345678, 1234, -20),
+                    std::invalid_argument);
+  auto accounts = atm.GetAccounts();
+  Account sam_account = accounts[{12345678, 1234}];
+
+  REQUIRE(sam_account.balance == 300.30);
+}
